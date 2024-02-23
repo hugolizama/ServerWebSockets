@@ -5,15 +5,22 @@
 	ErrorLog "logs/serverwebsockets-error.log"
 	CustomLog "logs/serverwebsockets-access.log" combined
 	
-	#ProxyPreserveHost On
+	#aun no puedo resolver que bloquee la raíz del sitio pero que permita navegar en los demas controladores
+	ProxyPreserveHost On
+	#ProxyPass / !
 	ProxyPass / http://127.0.0.17:6001/
     ProxyPassReverse / http://127.0.0.17:6001/
     #ProxyRequests Off
 	
 	RewriteEngine On
+	
 	RewriteCond %{HTTP:Connection} Upgrade [NC]
 	RewriteCond %{HTTP:Upgrade} websocket [NC]
 	RewriteRule /(.*) ws://127.0.0.17:6001/$1 [P,L]
+	
+	RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+    RewriteRule ^(.*/)$ $1index.php [L]
+	
 
 	
 	#SSLEngine on 	
