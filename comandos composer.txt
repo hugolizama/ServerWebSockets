@@ -1,0 +1,18 @@
+
+https://beyondco.de/docs/laravel-websockets/getting-started/installation
+"C:\www\php74\php" "C:\ProgramData\ComposerSetup\bin\composer.phar" require beyondcode/laravel-websockets
+
+php artisan vendor:publish
+Seleccionar la opción que tenga WebSocketsServiceProvider
+
+php artisan migrate
+
+php artisan websockets:serve
+
+Video 41: En linux se puede instalar un programa que se llama supervisor en donde se puede configurar que automáticamente se ejecute el comando para levantar el websocket.
+
+Video 42: Mapear un proxy invertido para hacer que la petición por el puerto 80 se transforme al puerto 6001.
+
+Para que el reverse proxy funcione es necesario tener los siguientes módulos de apache activados:
+- mod_proxy
+- mod_proxy_http

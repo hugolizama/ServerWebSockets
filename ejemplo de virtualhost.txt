@@ -1,0 +1,46 @@
+<VirtualHost 127.0.0.17:80>
+	DocumentRoot "C:\www\apache\htdocs\hugo\ServerWebSockets\public"
+	ServerName desarrollo.local
+	ServerAlias serverwebsockets.local
+	ErrorLog "logs/serverwebsockets-error.log"
+	CustomLog "logs/serverwebsockets-access.log" combined
+	
+	#ProxyPreserveHost On
+	ProxyPass / http://127.0.0.17:6001/
+    ProxyPassReverse / http://127.0.0.17:6001/
+    #ProxyRequests Off
+	
+	RewriteEngine On
+	RewriteCond %{HTTP:Connection} Upgrade [NC]
+	RewriteCond %{HTTP:Upgrade} websocket [NC]
+	RewriteRule /(.*) ws://127.0.0.17:6001/$1 [P,L]
+
+	
+	#SSLEngine on 	
+	SSLCertificateFile C:\www\ssl_local\desarrollo.local.crt
+	SSLCertificateKeyFile C:\www\ssl_local\desarrollo.local.key
+	
+	FcgidWrapper "c:/www/php74/php-cgi.exe" .php 
+	AddHandler fcgid-script .php
+	#FcgidMaxRequestLen	3072000000000
+	#FcgidIOTimeout 300
+	#FcgidIdleTimeout 300
+	#FcgidConnectTimeout 300
+	#FcgidProcessLifeTime  300
+	
+	<Directory "C:\www\apache\htdocs\hugo\ServerWebSockets\public">
+		<FilesMatch "\.php$">
+			SetHandler fcgid-script 
+		</FilesMatch> 
+		Options Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+		AllowOverride All
+		Require all granted
+		#Require local	
+	</Directory>
+
+	<Directory "c:/www/php74/">
+		<Files "php-cgi.exe">		
+			Require all granted		
+		</Files>
+	</Directory>	
+</VirtualHost>
